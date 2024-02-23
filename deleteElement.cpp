@@ -3,11 +3,11 @@ using namespace std;
 
 int main()
 {
-    map<int, int> sl;
     int t;
     cin >> t;
     while (t > 0)
     {
+        map<int, int> sl;
         int a, b;
         cin >> a >> b;
         while (a > 0)
