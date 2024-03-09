@@ -4,6 +4,9 @@ using namespace std;
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
+    cout.tie(NULL);
+    freopen("call.txt", "r", stdin);
+    freopen("callout.txt", "w", stdout);
     map<string, int> call, time;
     char act[5], query[23];
     string from, to, date, timeFrom, timeTo, target;

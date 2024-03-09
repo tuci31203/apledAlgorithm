@@ -32,7 +32,8 @@ int maxHistogram(int row[], int R, int C){
 
 
 int main(){
-
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     int r, c;
     cin >> r >> c;
     int a[r][c];

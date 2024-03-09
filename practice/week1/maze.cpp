@@ -44,6 +44,8 @@ int shortestPath(int* maze, int n, int m, int start_x, int start_y){
 }
 
 int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     int n, m, r, c;
     cin >> n >> m >> r >> c;
 
