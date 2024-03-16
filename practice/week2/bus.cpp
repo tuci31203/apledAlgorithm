@@ -7,21 +7,16 @@ bool visited[10000];
 int d[1000][1000];
 int x[1000];
 
-bool check(int v, int k)
+bool check(int v)
 {
-    if (visited[v] == true)
-        return false;
-    if (v > n)
+    if (v <= n)
     {
-        if (visited[v - n] == false)
-            return false;
+        return (!visited[v] && load < cap);
     }
     else
     {
-        if (load + 1 > cap)
-            return false;
+        return (!visited[v] && visited[v - n]);
     }
-    return true;
 }
 
 void updateBest()
@@ -34,7 +29,7 @@ void Try(int k)
 {
     for (int v = 1; v <= 2 * n; v++)
     {
-        if (check(v, k))
+        if (check(v))
         {
             x[k] = v;
             f += d[x[k - 1]][x[k]];
@@ -66,6 +61,9 @@ void Try(int k)
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     cin >> n >> cap;
     for (int i = 0; i <= 2 * n; i++)
     {
