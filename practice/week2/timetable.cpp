@@ -1,103 +1,78 @@
-#include <bits/stdc++.h>
-
+#include<bits/stdc++.h>
 using namespace std;
 
-struct Teacher
-{
-    vector<int> preferenceList;
+struct Teachers{
+    vector<int> courses;
     int load = 0;
 };
 
-vector<Teacher> teachers;
+int n,m,k;
+
+vector<Teachers> teacher;
 vector<vector<int>> conflicts;
-vector<int> courseAssignments;
-int maxLoad = 0;
+int courseAssignment[1000];
 
-bool isConflict(int course, int assignedCourse)
-{
-    for (auto &conflict : conflicts)
-    {
-        if ((conflict[0] == course && conflict[1] == assignedCourse) || (conflict[0] == assignedCourse && conflict[1] == course))
-        {
-            return true;
-        }
-    }
-    return false;
-}
+int maxLoad = -1, minSol = INT_MAX;
 
-bool assignCourses(int courseIndex)
-{
-    if (courseIndex == courseAssignments.size())
-    {
-        maxLoad = (*min_element(teachers.begin(), teachers.end(), [](const Teacher &t1, const Teacher &t2){ return t1.load > t2.load; })).load;
-
-        return true;
-    }
-
-    for (int i = 0; i < teachers.size(); ++i)
-    {
-        if (find(teachers[i].preferenceList.begin(), teachers[i].preferenceList.end(), courseIndex+1) != teachers[i].preferenceList.end())
-        {
-            bool conflict = false;
-            for (int j = 0; j < courseAssignments.size(); ++j)
-            {
-                if (courseAssignments[j] != -1 && isConflict(courseIndex+1, courseAssignments[j]))
-                {
-                    conflict = true;
-                    break;
-                }
-            }
-            if (!conflict)
-            {
-                teachers[i].load++;
-                courseAssignments[courseIndex] = i;
-                if (assignCourses(courseIndex + 1))
-                    return true;
-                teachers[i].load--;
-                courseAssignments[courseIndex] = -1;
-            }
-        }
-    }
-    return false;
-}
-
-int main()
-{
-    int m, n;
+void input(){
     cin >> m >> n;
-
-    teachers.resize(m);
-    courseAssignments.assign(n, -1);
-
-    for (int i = 0; i < m; i++)
-    {
-        int k;
+    int k;
+    for(int i=1; i<n+1; i++) courseAssignment[i] = -1;
+    teacher.resize(m);
+    for(int i=0; i<m; i++){
         cin >> k;
-        teachers[i].preferenceList.resize(k);
-        for (int j = 0; j < k; ++j)
-        {
-            cin >> teachers[i].preferenceList[j];
+        for (int j=0; j<k; j++){
+            int tmp;
+            cin >> tmp;
+            teacher[i].courses.push_back(tmp);
         }
     }
 
-    int k;
     cin >> k;
-    conflicts.resize(k);
-    for (int i = 0; i < k; i++)
-    {
-        int course1, course2;
-        cin >> course1 >> course2;
-        conflicts[i] = {course1, course2};
+    conflicts.resize(n+1);
+    for(int i=0; i<k; i++){
+        int tmp1, tmp2;
+        cin >> tmp1 >> tmp2;
+        conflicts[tmp1].push_back(tmp2);
+        conflicts[tmp2].push_back(tmp1);
     }
+}
 
-    if (assignCourses(0))
-    {
-        cout << maxLoad << endl;
-    }
-    else
-    {
-        cout << "-1" << endl;
-    }
 
+//check if course a can be assigned to teacher i
+bool check(int a, int i){
+    if(find(teacher[i].courses.begin(),teacher[i].courses.end(), a) == teacher[i].courses.end()) return false;
+    for(int j=0; j < conflicts[a].size(); j++){
+        if(courseAssignment[conflicts[a].at(j)] == i) return false;
+    }
+    return true;
+}
+
+void Try(int k){
+    for (int i=0; i < m; i++){
+        if(check(k, i)){
+            courseAssignment[k] = i;
+            teacher[i].load++;
+            int tmpLoad = maxLoad;
+            maxLoad = max(maxLoad, teacher[i].load);
+
+            if(k == n) minSol = min(minSol, maxLoad);
+            else{
+                if(maxLoad < minSol) Try(k+1);
+            }
+            teacher[i].load--;
+            maxLoad = tmpLoad;
+            courseAssignment[k] = -1;
+        }
+    }
+}
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    input();
+    Try(1);
+    cout << minSol;
     return 0;
 }
