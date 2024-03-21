@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int MAX = 25;
+const int MAX = 100;
 int n, K, Q;
 int d[MAX];
 bool visited[MAX]; // danh dau cac dia diem da di qua
